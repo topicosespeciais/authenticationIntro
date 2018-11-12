@@ -1,3 +1,4 @@
+
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
@@ -5,14 +6,22 @@ var mongoose = require('mongoose');
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 
+mongoose.Promise = require('bluebird');
+
 //connect to MongoDB
-mongoose.connect('mongodb://localhost/testForAuth');
+mongoose.connect('mongodb://127.0.0.1/some-db', {
+    authSource: 'admin',
+    user: 'mongoadmin',
+    pass: 'secret',
+    useMongoClient: true
+});
 var db = mongoose.connection;
 
 //handle mongo error
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
   // we're connected!
+  console.log('connected');
 });
 
 //use sessions for tracking logins
